@@ -108,7 +108,7 @@ class PesertaController extends Controller
             });
 
             $imported = $import->getImportedCount();
-            $failures = $import->failures();
+            $failures = $import->getFailures();
             $failedCount = count($failures);
 
             $message = "Berhasil mengimpor {$imported} data peserta.";
@@ -124,7 +124,7 @@ class PesertaController extends Controller
                 $errorDetails[] = [
                     'row' => $failure->row(),
                     'attribute' => $failure->attribute(),
-                    errors => $failure->errors(),
+                    'errors' => $failure->errors(),
                 ];
                 $limit++;
             }

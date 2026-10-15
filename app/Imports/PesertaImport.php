@@ -10,20 +10,17 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Maatwebsite\Excel\Concerns\SkipsOnFailure;
-use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Validators\Failure;
-use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 
-class PesertaImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure
+class PesertaImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnFailure, SkipsEmptyRows
 {
-    use SkipsFailures;
-
     protected $skemas;
     protected $importedCount = 0;
     protected $seenNiks = [];
     protected $seenEmails = [];
-    protected $skemaCache = [];
+    protected $failuresList = [];
 
     public function __construct()
     {
@@ -33,7 +30,7 @@ class PesertaImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnF
 
     public function prepareForValidation($data, $index)
     {
-        // 1. Normalisasi NIK (penanganan angka ilmiah/scientific notation jika terbaca sebagai float/int)
+        // 1. Normalisasi NIK
         if (isset($data['nik'])) {
             $nikVal = trim((string)$data['nik']);
             if (is_numeric($nikVal) && stripos($nikVal, 'e') !== false) {
@@ -50,19 +47,16 @@ class PesertaImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnF
             $data['kode_skema'] = trim((string)$data['kode_skema']);
         }
 
-        // 3. Konversi Tanggal Lahir (mendukung serial Excel date maupun string Y-m-d / d-m-Y)
+        // 3. Konversi Tanggal Lahir
         if (isset($data['tanggal_lahir'])) {
             $tgl = $data['tanggal_lahir'];
             if (is_numeric($tgl)) {
                 try {
                     $dateTime = ExcelDate::excelToDateTimeObject($tgl);
                     $data['tanggal_lahir'] = $dateTime->format('Y-m-d');
-                } catch (\Exception $e) {
-                    // Biarkan divalidasi oleh rule date
-                }
+                } catch (\Exception $e) {}
             } elseif (is_string($tgl)) {
                 $tgl = trim($tgl);
-                // Cek format d-m-Y atau d/m/Y
                 if (preg_match('/^\d{1,2}[-\/]\d{1,2}[-\/]\d{4}$/', $tgl)) {
                     try {
                         $parsed = Carbon::createFromFormat(strpos($tgl, '/') !== false ? 'd/m/Y' : 'd-m-Y', $tgl);
@@ -72,7 +66,7 @@ class PesertaImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnF
             }
         }
 
-        // 4. Normalisasi Jenis Kelamin (tidak peka huruf besar/kecil)
+        // 4. Normalisasi Jenis Kelamin
         if (isset($data['jenis_kelamin'])) {
             $data['jenis_kelamin'] = strtoupper(trim((string)$data['jenis_kelamin']));
         }
@@ -111,7 +105,7 @@ class PesertaImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnF
             'nama_lengkap.required' => 'Nama lengkap wajib diisi.',
             'nik.required' => 'NIK wajib diisi.',
             'nik.size' => 'NIK harus tepat 16 karakter angka.',
-            'nik.regex' => 'NIK harus berupa 16 digit angka valid (tidak boleh notasi ilmiah).',
+            'nik.regex' => 'NIK harus berupa 16 digit angka valid.',
             'nik.unique' => 'NIK sudah terdaftar di database.',
             'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
@@ -132,19 +126,17 @@ class PesertaImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnF
         $email = $row['email'];
         $kodeSkema = $row['kode_skema'];
 
-        // 5. Pencegahan Duplikasi di Dalam File yang Sama (In-File Duplicates)
+        // 5. Pencegahan Duplikasi In-File
         if (isset($this->seenNiks[$nik]) || isset($this->seenEmails[$email])) {
             throw new \Exception("Duplikasi data NIK ({$nik}) atau Email ({$email}) di dalam file Excel yang sama.");
         }
 
-        // Cek keberadaan kode_skema dari pre-fetched array
         if (!isset($this->skemas[$kodeSkema])) {
             throw new \Exception("Kode skema '{$kodeSkema}' tidak ditemukan di database.");
         }
 
         $skemaId = $this->skemas[$kodeSkema];
 
-        // Tentukan status (jika kolom status diisi dan valid, gunakan; jika tidak, default PENDING)
         $statusVal = StatusPeserta::PENDING;
         if (!empty($row['status'])) {
             $enumStatus = StatusPeserta::tryFrom(strtolower(trim($row['status'])));
@@ -153,10 +145,8 @@ class PesertaImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnF
             }
         }
 
-        // Tandai sudah dilihat dalam file
         $this->seenNiks[$nik] = true;
         $this->seenEmails[$email] = true;
-
         $this->importedCount++;
 
         return new Peserta([
@@ -170,6 +160,18 @@ class PesertaImport implements ToModel, WithHeadingRow, WithValidation, SkipsOnF
             'skema_sertifikasi_id' => $skemaId,
             'status' => $statusVal,
         ]);
+    }
+
+    public function onFailure(Failure ...$failures)
+    {
+        foreach ($failures as $failure) {
+            $this->failuresList[] = $failure;
+        }
+    }
+
+    public function getFailures(): array
+    {
+        return $this->failuresList;
     }
 
     public function getImportedCount(): int
