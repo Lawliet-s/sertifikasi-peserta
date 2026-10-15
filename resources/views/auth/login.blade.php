@@ -67,6 +67,138 @@
             opacity: 0;
             transform: translateX(-35%) scaleX(.15);
         }
+        /* ===== Aksesoris karakter ===== */
+        /* A: topi tinggi */
+        .scene .hat-top {
+            position: absolute;
+            left: 50%;
+            bottom: 100%;
+            width: 96px;
+            height: 72px;
+            margin-left: -48px;
+        }
+        .scene .hat-top::before {
+            content: '';
+            position: absolute;
+            left: 14px;
+            right: 14px;
+            bottom: 8px;
+            height: 64px;
+            border-radius: 6px 6px 0 0;
+            background: linear-gradient(to bottom, #f8fafc 0 68%, #f43f5e 68% 86%, #f8fafc 86% 100%);
+        }
+        .scene .hat-top::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 10px;
+            border-radius: 5px;
+            background: #f8fafc;
+        }
+        /* B: kacamata bulat */
+        .scene .glasses .eye { box-shadow: 0 0 0 5px #0f172a; }
+        .scene .glasses::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 34px;
+            height: 5px;
+            margin: -2px 0 0 -17px;
+            background: #0f172a;
+        }
+        /* C: dasi kupu-kupu */
+        .scene .bowtie {
+            position: absolute;
+            left: 50%;
+            bottom: 20px;
+            width: 60px;
+            height: 28px;
+            margin-left: -30px;
+        }
+        .scene .bowtie::before,
+        .scene .bowtie::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 28px;
+            height: 28px;
+            background: #f43f5e;
+        }
+        .scene .bowtie::before { left: 0; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+        .scene .bowtie::after { right: 0; clip-path: polygon(100% 0, 0 50%, 100% 100%); }
+        .scene .bowtie i {
+            position: absolute;
+            left: 50%;
+            top: 7px;
+            width: 12px;
+            height: 14px;
+            margin-left: -6px;
+            border-radius: 4px;
+            background: #be123c;
+            z-index: 1;
+        }
+        /* E: pipi merona */
+        .scene .blush {
+            position: absolute;
+            top: 86px;
+            width: 14px;
+            height: 8px;
+            border-radius: 9999px;
+            background: #f472b6;
+            opacity: .85;
+        }
+        /* D: topi baseball */
+        .scene .cap {
+            position: absolute;
+            left: 50%;
+            bottom: 100%;
+            width: 92px;
+            height: 40px;
+            margin-left: -46px;
+        }
+        .scene .cap::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            bottom: -2px;
+            width: 76px;
+            height: 38px;
+            border-radius: 38px 38px 0 0;
+            background: #f43f5e;
+        }
+        .scene .cap::after {
+            content: '';
+            position: absolute;
+            left: 48px;
+            bottom: -2px;
+            width: 58px;
+            height: 10px;
+            border-radius: 0 10px 10px 0;
+            background: #be123c;
+        }
+        /* F: headphone */
+        .scene .hp-band {
+            position: absolute;
+            left: -9px;
+            top: -9px;
+            width: 150px;
+            height: 110px;
+            border: 7px solid #f8fafc;
+            border-bottom: 0;
+            border-radius: 75px 75px 0 0;
+        }
+        .scene .hp-cup {
+            position: absolute;
+            top: 62px;
+            width: 24px;
+            height: 54px;
+            border-radius: 10px;
+            background: #f8fafc;
+            box-shadow: inset 0 0 0 4px #059669;
+        }
         @keyframes bob {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-4px); }
@@ -99,6 +231,7 @@
 
                 <!-- A: persegi panjang tinggi -->
                 <div class="char" style="left:68px;width:190px;height:380px;background:#4f46e5;border-radius:14px 14px 0 0;z-index:1;">
+                    <span class="hat-top"></span>
                     <div class="turn">
                         <div class="face" style="top:66px;gap:32px;--s:30px">
                             <span class="eye"><span class="pupil"></span></span>
@@ -110,7 +243,7 @@
                 <!-- B: persegi panjang lebar -->
                 <div class="char" style="left:225px;width:204px;height:258px;background:#475569;border-radius:14px 14px 0 0;z-index:2;animation-delay:-1.2s;">
                     <div class="turn">
-                        <div class="face" style="top:54px;gap:40px;--s:30px">
+                        <div class="face glasses" style="top:54px;gap:40px;--s:30px">
                             <span class="eye"><span class="pupil"></span></span>
                             <span class="eye"><span class="pupil"></span></span>
                         </div>
@@ -120,6 +253,8 @@
                 <!-- E: segitiga kecil di atas B (bergerak bersama B) -->
                 <div class="char" style="left:266px;bottom:258px;width:122px;height:108px;background:#818cf8;clip-path:polygon(50% 0, 100% 100%, 0 100%);z-index:3;animation-delay:-1.2s;">
                     <div class="turn">
+                        <span class="blush" style="left:calc(50% - 40px)"></span>
+                        <span class="blush" style="right:calc(50% - 40px)"></span>
                         <div class="face" style="top:62px;gap:11px;--s:20px">
                             <span class="eye"><span class="pupil"></span></span>
                             <span class="eye"><span class="pupil"></span></span>
@@ -130,6 +265,7 @@
                 <!-- C: segitiga besar -->
                 <div class="char" style="left:20px;width:204px;height:177px;background:#fbbf24;clip-path:polygon(50% 0, 100% 100%, 0 100%);z-index:4;animation-delay:-2.4s;">
                     <div class="turn">
+                        <div class="bowtie"><i></i></div>
                         <div class="face" style="top:98px;gap:19px;--s:25px">
                             <span class="eye"><span class="pupil"></span></span>
                             <span class="eye"><span class="pupil"></span></span>
@@ -139,6 +275,7 @@
 
                 <!-- D: persegi -->
                 <div class="char" style="left:408px;width:156px;height:156px;background:#c7d2fe;border-radius:11px 11px 0 0;z-index:5;animation-delay:-3.2s;">
+                    <span class="cap"></span>
                     <div class="turn">
                         <div class="face" style="top:44px;gap:30px;--s:27px">
                             <span class="eye"><span class="pupil"></span></span>
@@ -148,7 +285,10 @@
                 </div>
 
                 <!-- F: pil tinggi (varian baru, di belakang D) -->
-                <div class="char" style="left:466px;width:132px;height:440px;background:#34d399;border-radius:66px 66px 0 0;z-index:0;animation-delay:-4.1s;">
+                <div class="char" style="left:452px;width:132px;height:440px;background:#34d399;border-radius:66px 66px 0 0;z-index:0;animation-delay:-4.1s;">
+                    <div class="hp-band"></div>
+                    <span class="hp-cup" style="left:-14px"></span>
+                    <span class="hp-cup" style="right:-14px"></span>
                     <div class="turn">
                         <div class="face" style="top:72px;gap:26px;--s:36px">
                             <span class="eye"><span class="pupil"></span></span>
