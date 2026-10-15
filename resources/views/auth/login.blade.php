@@ -203,13 +203,16 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-4px); }
         }
-        #scene { transform-origin: center center; }
-        @media (max-width: 1535px) {
-            #scene { transform: scale(.9); }
-        }
-        @media (max-width: 1279px) {
-            #scene { transform: scale(.7); }
-        }
+        /* Skala karakter menyesuaikan lebar panel kiri */
+        #scene { transform-origin: center bottom; transform: scale(.7); }
+        @media (min-width: 1152px) { #scene { transform: scale(.8); } }
+        @media (min-width: 1280px) { #scene { transform: scale(.92); } }
+        @media (min-width: 1408px) { #scene { transform: scale(1); } }
+        @media (min-width: 1536px) { #scene { transform: scale(1.12); } }
+        @media (min-width: 1920px) { #scene { transform: scale(1.4); } }
+        /* Layar pendek: kecilkan sedikit agar tidak menimpa judul */
+        @media (max-height: 900px) and (min-width: 1920px) { #scene { transform: scale(1.12); } }
+        @media (max-height: 780px) and (min-width: 1408px) { #scene { transform: scale(.95); } }
         @media (prefers-reduced-motion: reduce) {
             .scene .char { animation: none; }
             .scene *, .scene *::before, .scene *::after { transition: none !important; }
@@ -220,14 +223,21 @@
 <div class="min-h-screen grid lg:grid-cols-2">
 
     <!-- Panel kiri: karakter animasi (hanya tampil di layar besar) -->
-    <aside class="hidden lg:flex flex-col justify-between bg-slate-950 text-slate-300 p-10 border-r border-slate-800">
+    <aside class="hidden lg:flex flex-col bg-slate-950 text-slate-300 px-10 pt-10 pb-0 border-r border-slate-800">
         <div class="flex items-center">
             <i data-lucide="shield-check" class="w-6 h-6 text-indigo-400 mr-3"></i>
             <span class="font-bold text-white text-lg tracking-wide">Sertifikasi</span>
         </div>
 
-        <div class="flex-1 flex items-center justify-center">
-            <div id="scene" class="scene relative" data-mood="watch" style="width:600px;height:460px" aria-hidden="true">
+        <!-- Judul (di atas karakter) -->
+        <div class="mt-10">
+            <h2 class="text-2xl font-semibold text-white">Pengelolaan Data Peserta Sertifikasi</h2>
+            <p class="text-sm text-slate-400 mt-2">Kelola data peserta dan skema sertifikasi dalam satu tempat.</p>
+            <p class="text-xs text-slate-500 mt-4">Uji Kompetensi JWD &copy; 2026</p>
+        </div>
+
+        <div class="flex-1 flex items-end justify-center" style="clip-path:inset(-200px -200px 0 -200px)">
+            <div id="scene" class="scene relative" data-mood="watch" style="width:600px;height:460px;margin-bottom:-24px" aria-hidden="true">
 
                 <!-- A: persegi panjang tinggi -->
                 <div class="char" style="left:68px;width:190px;height:380px;background:#4f46e5;border-radius:14px 14px 0 0;z-index:1;">
@@ -300,11 +310,6 @@
             </div>
         </div>
 
-        <div>
-            <h2 class="text-xl font-semibold text-white">Pengelolaan Data Peserta Sertifikasi</h2>
-            <p class="text-sm text-slate-400 mt-1">Kelola data peserta dan skema sertifikasi dalam satu tempat.</p>
-            <p class="text-xs text-slate-500 mt-6">Uji Kompetensi JWD &copy; 2026</p>
-        </div>
     </aside>
 
     <!-- Panel kanan: form login -->
