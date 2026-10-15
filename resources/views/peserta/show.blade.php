@@ -1,17 +1,22 @@
 @extends('layouts.app')
 
-@section('title', 'Data Peserta')
+@section('title', 'Detail Peserta')
 
 @section('content')
 <div class="max-w-3xl mx-auto bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm p-6 space-y-6">
-    <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 dark:border-slate-700 pb-4">
         <div>
             <h2 class="text-xl font-bold text-slate-800 dark:text-white">{{ $peserta->nama_lengkap }}</h2>
             <p class="text-sm text-slate-500 dark:text-slate-400 font-mono mt-0.5">NIK: {{ $peserta->nik }}</p>
         </div>
-        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
-            {{ $peserta->skema->nama_skema ?? '-' }}
-        </span>
+        <div class="flex items-center space-x-2">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {{ $peserta->status->badgeClass() }}">
+                {{ $peserta->status->label() }}
+            </span>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
+                {{ $peserta->skema->nama_skema ?? '-' }}
+            </span>
+        </div>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">

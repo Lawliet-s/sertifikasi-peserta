@@ -72,6 +72,22 @@
         </div>
     </div>
 
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+            <label for="status" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Status</label>
+            <select id="status" name="status" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-900 border @error('status') border-rose-500 dark:border-rose-500 @else border-slate-300 dark:border-slate-700 @enderror rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm">
+                @foreach($statuses as $st)
+                    <option value="{{ $st->value }}" {{ old('status', $peserta->status->value ?? \App\Enums\StatusPeserta::PENDING->value) == $st->value ? 'selected' : '' }}>
+                        {{ $st->label() }}
+                    </option>
+                @endforeach
+            </select>
+            @error('status')
+                <p class="mt-1 text-sm text-rose-600 dark:text-rose-400">{{ $message }}</p>
+            @enderror
+        </div>
+    </div>
+
     <div>
         <label for="alamat" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Alamat</label>
         <textarea id="alamat" name="alamat" rows="3" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-900 border @error('alamat') border-rose-500 dark:border-rose-500 @else border-slate-300 dark:border-slate-700 @enderror rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm">{{ old('alamat', $peserta->alamat ?? '') }}</textarea>

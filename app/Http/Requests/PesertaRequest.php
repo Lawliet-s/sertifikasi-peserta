@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\StatusPeserta;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -36,6 +37,7 @@ class PesertaRequest extends FormRequest
             'jenis_kelamin' => ['required', 'in:L,P'],
             'alamat' => ['required', 'string'],
             'skema_sertifikasi_id' => ['required', 'exists:skema_sertifikasi,id'],
+            'status' => ['required', Rule::enum(StatusPeserta::class)],
         ];
     }
 
@@ -57,6 +59,8 @@ class PesertaRequest extends FormRequest
             'alamat.required' => 'Alamat wajib diisi.',
             'skema_sertifikasi_id.required' => 'Skema sertifikasi wajib dipilih.',
             'skema_sertifikasi_id.exists' => 'Skema sertifikasi yang dipilih tidak valid.',
+            'status.required' => 'Status peserta wajib dipilih.',
+            'status.Illuminate\Validation\Rules\Enum' => 'Pilihan status tidak valid.',
         ];
     }
 
@@ -71,6 +75,7 @@ class PesertaRequest extends FormRequest
             'jenis_kelamin' => 'Jenis Kelamin',
             'alamat' => 'Alamat',
             'skema_sertifikasi_id' => 'Skema Sertifikasi',
+            'status' => 'Status',
         ];
     }
 }

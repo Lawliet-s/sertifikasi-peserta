@@ -8,11 +8,14 @@
         <h2 class="text-xl font-bold text-slate-800 dark:text-white">Daftar Peserta Sertifikasi</h2>
         <div class="flex items-center space-x-3">
             <form action="{{ route('peserta.index') }}" method="GET" class="flex items-center">
+                @if(request('status'))
+                    <input type="hidden" name="status" value="{{ request('status') }}">
+                @endif
                 <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari nama, NIK, email..." class="px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-l-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 <button type="submit" aria-label="Cari" class="px-4 py-2 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 text-white rounded-r-lg text-sm font-medium transition flex items-center">
                     <i data-lucide="search" class="w-4 h-4"></i>
                 </button>
-                @if(!empty($search))
+                @if(!empty($search) || request('status'))
                     <a href="{{ route('peserta.index') }}" class="ml-2 px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-750 transition">Reset</a>
                 @endif
             </form>
@@ -20,6 +23,25 @@
                 <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Tambah Peserta
             </a>
         </div>
+    </div>
+
+    <!-- Tab Filter Status -->
+    <div class="flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-700 pb-3 text-sm">
+        <a href="{{ route('peserta.index', array_merge(request()->except(['status', 'page']), [])) }}" class="px-3.5 py-1.5 rounded-lg font-medium transition {{ !request('status') ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750' }}">
+            Semua ({{ $totalPeserta ?? 0 }})
+        </a>
+        <a href="{{ route('peserta.index', array_merge(request()->except(['status', 'page']), ['status' => 'pending'])) }}" class="px-3.5 py-1.5 rounded-lg font-medium transition {{ request('status') === 'pending' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750' }}">
+            Pending ({{ $statusCounts['pending'] ?? 0 }})
+        </a>
+        <a href="{{ route('peserta.index', array_merge(request()->except(['status', 'page']), ['status' => 'terverifikasi'])) }}" class="px-3.5 py-1.5 rounded-lg font-medium transition {{ request('status') === 'terverifikasi' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750' }}">
+            Terverifikasi ({{ $statusCounts['terverifikasi'] ?? 0 }})
+        </a>
+        <a href="{{ route('peserta.index', array_merge(request()->except(['status', 'page']), ['status' => 'lulus'])) }}" class="px-3.5 py-1.5 rounded-lg font-medium transition {{ request('status') === 'lulus' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750' }}">
+            Lulus ({{ $statusCounts['lulus'] ?? 0 }})
+        </a>
+        <a href="{{ route('peserta.index', array_merge(request()->except(['status', 'page']), ['status' => 'tidak_lulus'])) }}" class="px-3.5 py-1.5 rounded-lg font-medium transition {{ request('status') === 'tidak_lulus' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-750' }}">
+            Tidak Lulus ({{ $statusCounts['tidak_lulus'] ?? 0 }})
+        </a>
     </div>
 
     <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
@@ -30,6 +52,7 @@
                         <th class="py-3 px-6 font-medium">Nama Lengkap</th>
                         <th class="py-3 px-6 font-medium">NIK</th>
                         <th class="py-3 px-6 font-medium">Skema</th>
+                        <th class="py-3 px-6 font-medium">Status</th>
                         <th class="py-3 px-6 font-medium">Kontak</th>
                         <th class="py-3 px-6 font-medium text-right">Aksi</th>
                     </tr>
@@ -42,6 +65,11 @@
                             <td class="py-3.5 px-6">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300">
                                     {{ $peserta->skema->nama_skema ?? '-' }}
+                                </span>
+                            </td>
+                            <td class="py-3.5 px-6">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $peserta->status->badgeClass() }}">
+                                    {{ $peserta->status->label() }}
                                 </span>
                             </td>
                             <td class="py-3.5 px-6 text-slate-600 dark:text-slate-300">
@@ -66,7 +94,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="py-6 px-6 text-center text-slate-500 dark:text-slate-400">Tidak ada data peserta ditemukan.</td>
+                            <td colspan="6" class="py-6 px-6 text-center text-slate-500 dark:text-slate-400">Tidak ada data peserta ditemukan.</td>
                         </tr>
                     @endforelse
                 </tbody>

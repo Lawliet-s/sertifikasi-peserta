@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\StatusPeserta;
 use App\Http\Requests\PesertaRequest;
 use App\Models\Peserta;
 use App\Models\SkemaSertifikasi;
@@ -14,6 +15,7 @@ class PesertaController extends Controller
     public function index(Request $request): View
     {
         $search = $request->input('search');
+        $status = $request->input('status');
 
         $pesertas = Peserta::with('skema')
             ->when($search, function ($query, $search) {
@@ -23,17 +25,29 @@ class PesertaController extends Controller
                       ->orWhere('email', 'like', "%{$search}%");
                 });
             })
+            ->when($status, function ($query, $status) {
+                $query->where('status', $status);
+            })
             ->latest()
             ->paginate(10)
             ->withQueryString();
 
-        return view('peserta.index', compact('pesertas', 'search'));
+        // Hitung jumlah peserta per status untuk tab filter
+        $statusCounts = Peserta::select('status', \DB::raw('count(*) as total'))
+            ->groupBy('status')
+            ->pluck('total', 'status')
+            ->all();
+
+        $totalPeserta = array_sum($statusCounts);
+
+        return view('peserta.index', compact('pesertas', 'search', 'status', 'statusCounts', 'totalPeserta'));
     }
 
     public function create(): View
     {
         $skemas = SkemaSertifikasi::all();
-        return view('peserta.create', compact('skemas'));
+        $statuses = StatusPeserta::cases();
+        return view('peserta.create', compact('skemas', 'statuses'));
     }
 
     public function store(PesertaRequest $request): RedirectResponse
@@ -52,7 +66,8 @@ class PesertaController extends Controller
     public function edit(Peserta $peserta): View
     {
         $skemas = SkemaSertifikasi::all();
-        return view('peserta.edit', compact('peserta', 'skemas'));
+        $statuses = StatusPeserta::cases();
+        return view('peserta.edit', compact('peserta', 'skemas', 'statuses'));
     }
 
     public function update(PesertaRequest $request, Peserta $peserta): RedirectResponse

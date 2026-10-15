@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\StatusPeserta;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,10 +21,12 @@ class Peserta extends Model
         'jenis_kelamin',
         'alamat',
         'skema_sertifikasi_id',
+        'status',
     ];
 
     protected $casts = [
         'tanggal_lahir' => 'date',
+        'status' => StatusPeserta::class,
     ];
 
     public function skema()
