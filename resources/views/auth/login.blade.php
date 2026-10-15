@@ -25,6 +25,7 @@
             position: absolute;
             bottom: 0;
             animation: bob 5s ease-in-out infinite;
+            transition: translate .3s ease-out;
         }
         .scene .turn {
             position: absolute;
@@ -70,8 +71,12 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-4px); }
         }
+        #scene { transform-origin: center center; }
+        @media (max-width: 1535px) {
+            #scene { transform: scale(.9); }
+        }
         @media (max-width: 1279px) {
-            #scene { transform: scale(.88); }
+            #scene { transform: scale(.7); }
         }
         @media (prefers-reduced-motion: reduce) {
             .scene .char { animation: none; }
@@ -90,12 +95,12 @@
         </div>
 
         <div class="flex-1 flex items-center justify-center">
-            <div id="scene" class="scene relative" data-mood="watch" style="width:440px;height:340px" aria-hidden="true">
+            <div id="scene" class="scene relative" data-mood="watch" style="width:600px;height:460px" aria-hidden="true">
 
                 <!-- A: persegi panjang tinggi -->
-                <div class="char" style="left:50px;width:140px;height:280px;background:#4f46e5;border-radius:10px 10px 0 0;z-index:1;">
+                <div class="char" style="left:68px;width:190px;height:380px;background:#4f46e5;border-radius:14px 14px 0 0;z-index:1;">
                     <div class="turn">
-                        <div class="face" style="top:48px;gap:24px;--s:22px">
+                        <div class="face" style="top:66px;gap:32px;--s:30px">
                             <span class="eye"><span class="pupil"></span></span>
                             <span class="eye"><span class="pupil"></span></span>
                         </div>
@@ -103,9 +108,9 @@
                 </div>
 
                 <!-- B: persegi panjang lebar -->
-                <div class="char" style="left:165px;width:150px;height:190px;background:#475569;border-radius:10px 10px 0 0;z-index:2;animation-delay:-1.2s;">
+                <div class="char" style="left:225px;width:204px;height:258px;background:#475569;border-radius:14px 14px 0 0;z-index:2;animation-delay:-1.2s;">
                     <div class="turn">
-                        <div class="face" style="top:40px;gap:30px;--s:22px">
+                        <div class="face" style="top:54px;gap:40px;--s:30px">
                             <span class="eye"><span class="pupil"></span></span>
                             <span class="eye"><span class="pupil"></span></span>
                         </div>
@@ -113,9 +118,9 @@
                 </div>
 
                 <!-- E: segitiga kecil di atas B (bergerak bersama B) -->
-                <div class="char" style="left:200px;bottom:190px;width:90px;height:80px;background:#818cf8;clip-path:polygon(50% 0, 100% 100%, 0 100%);z-index:3;animation-delay:-1.2s;">
+                <div class="char" style="left:266px;bottom:258px;width:122px;height:108px;background:#818cf8;clip-path:polygon(50% 0, 100% 100%, 0 100%);z-index:3;animation-delay:-1.2s;">
                     <div class="turn">
-                        <div class="face" style="top:46px;gap:8px;--s:15px">
+                        <div class="face" style="top:62px;gap:11px;--s:20px">
                             <span class="eye"><span class="pupil"></span></span>
                             <span class="eye"><span class="pupil"></span></span>
                         </div>
@@ -123,9 +128,9 @@
                 </div>
 
                 <!-- C: segitiga besar -->
-                <div class="char" style="left:15px;width:150px;height:130px;background:#fbbf24;clip-path:polygon(50% 0, 100% 100%, 0 100%);z-index:4;animation-delay:-2.4s;">
+                <div class="char" style="left:20px;width:204px;height:177px;background:#fbbf24;clip-path:polygon(50% 0, 100% 100%, 0 100%);z-index:4;animation-delay:-2.4s;">
                     <div class="turn">
-                        <div class="face" style="top:72px;gap:14px;--s:18px">
+                        <div class="face" style="top:98px;gap:19px;--s:25px">
                             <span class="eye"><span class="pupil"></span></span>
                             <span class="eye"><span class="pupil"></span></span>
                         </div>
@@ -133,9 +138,19 @@
                 </div>
 
                 <!-- D: persegi -->
-                <div class="char" style="left:300px;width:115px;height:115px;background:#c7d2fe;border-radius:8px 8px 0 0;z-index:5;animation-delay:-3.2s;">
+                <div class="char" style="left:408px;width:156px;height:156px;background:#c7d2fe;border-radius:11px 11px 0 0;z-index:5;animation-delay:-3.2s;">
                     <div class="turn">
-                        <div class="face" style="top:32px;gap:22px;--s:20px">
+                        <div class="face" style="top:44px;gap:30px;--s:27px">
+                            <span class="eye"><span class="pupil"></span></span>
+                            <span class="eye"><span class="pupil"></span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- F: pil tinggi (varian baru, di belakang D) -->
+                <div class="char" style="left:466px;width:132px;height:440px;background:#34d399;border-radius:66px 66px 0 0;z-index:0;animation-delay:-4.1s;">
+                    <div class="turn">
+                        <div class="face" style="top:72px;gap:26px;--s:36px">
                             <span class="eye"><span class="pupil"></span></span>
                             <span class="eye"><span class="pupil"></span></span>
                         </div>
@@ -205,10 +220,11 @@
                 </div>
 
                 <div class="flex items-center justify-between text-sm">
-                    <div class="flex items-center">
-                        <input id="remember" name="remember" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-slate-300 rounded">
-                        <label for="remember" class="ml-2 block text-slate-700 dark:text-slate-300">Ingat Saya</label>
-                    </div>
+                    <label for="remember" class="group inline-flex items-center gap-2.5 cursor-pointer select-none py-1 pr-2 text-slate-700 dark:text-slate-300">
+                        <input id="remember" name="remember" type="checkbox" value="1" {{ old('remember') ? 'checked' : '' }}
+                               class="h-5 w-5 cursor-pointer rounded accent-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+                        <span class="group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">Ingat Saya</span>
+                    </label>
                 </div>
 
                 <div>
@@ -247,6 +263,7 @@
 
         var faces = Array.prototype.slice.call(scene.querySelectorAll('.face'));
         var eyes = Array.prototype.slice.call(scene.querySelectorAll('.eye'));
+        var chars = Array.prototype.slice.call(scene.querySelectorAll('.char'));
         var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         var IDLE_MS = 4000;
@@ -276,6 +293,18 @@
             var target = lookTarget(mood);
             var active = target && mood !== 'away';
 
+            // Badan karakter ikut bergeser sedikit ke arah kursor (naik saat kursor di atas)
+            var sRect = scene.getBoundingClientRect();
+            var sx = 0, sy = 0;
+            if (active) {
+                sx = Math.max(-1, Math.min(1, (target.x - (sRect.left + sRect.width / 2)) / 400));
+                sy = Math.max(-1, Math.min(1, (target.y - (sRect.top + sRect.height / 2)) / 300));
+            }
+            chars.forEach(function (ch, i) {
+                var depth = 0.6 + (i % 3) * 0.2;
+                ch.style.translate = (sx * 6 * depth) + 'px ' + (sy * 10 * depth) + 'px';
+            });
+
             faces.forEach(function (face) {
                 var box = face.parentElement.getBoundingClientRect();
                 var x = 0, y = 0;
@@ -286,7 +315,7 @@
                     var d = Math.hypot(dx, dy) || 1;
                     var k = Math.min(d / 240, 1) * 6;
                     x = dx / d * k;
-                    y = dy / d * k * 0.6;
+                    y = dy / d * k;
                 }
                 face.style.transform = 'translate(' + x + 'px,' + y + 'px)';
             });
