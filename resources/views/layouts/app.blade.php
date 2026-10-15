@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Dashboard') - Sertifikasi Peserta</title>
     <!-- Offline Tailwind CSS & Lucide Icons -->
-    <script src="{{ asset('vendor/tailwindcss/tailwindcss.js') }}"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
