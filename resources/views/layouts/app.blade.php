@@ -100,19 +100,29 @@
             <!-- Main Dynamic Content -->
             <main class="flex-1 p-6 overflow-y-auto">
                 @if(session('success'))
-                    <div role="alert" class="mb-6 p-4 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-sm flex items-center justify-between shadow-sm">
-                        <div class="flex items-center">
-                            <i data-lucide="check-circle-2" class="w-5 h-5 mr-2 text-emerald-600 dark:text-emerald-400"></i>
-                            <span>{{ session('success') }}</span>
+                    <div role="alert" class="mb-6 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border-l-4 border-emerald-500 dark:border-emerald-400 text-emerald-800 dark:text-emerald-200 text-sm flex items-center justify-between shadow-sm">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-1 bg-emerald-100 dark:bg-emerald-900/50 rounded-lg text-emerald-600 dark:text-emerald-300">
+                                <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <span class="font-semibold block text-emerald-900 dark:text-emerald-100">Berhasil</span>
+                                <span class="text-xs text-emerald-700 dark:text-emerald-300">{{ session('success') }}</span>
+                            </div>
                         </div>
                     </div>
                 @endif
 
                 @if(session('error'))
-                    <div role="alert" class="mb-6 p-4 rounded-lg bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 text-sm flex items-center justify-between shadow-sm">
-                        <div class="flex items-center">
-                            <i data-lucide="alert-circle" class="w-5 h-5 mr-2 text-rose-600 dark:text-rose-400"></i>
-                            <span>{{ session('error') }}</span>
+                    <div role="alert" class="mb-6 p-4 rounded-xl bg-rose-50 dark:bg-rose-950/60 border-l-4 border-rose-500 dark:border-rose-400 text-rose-800 dark:text-rose-200 text-sm flex items-center justify-between shadow-sm">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-1 bg-rose-100 dark:bg-rose-900/50 rounded-lg text-rose-600 dark:text-rose-300">
+                                <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <span class="font-semibold block text-rose-900 dark:text-rose-100">Perhatian</span>
+                                <span class="text-xs text-rose-700 dark:text-rose-300">{{ session('error') }}</span>
+                            </div>
                         </div>
                     </div>
                 @endif

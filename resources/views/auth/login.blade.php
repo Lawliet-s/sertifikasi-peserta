@@ -170,9 +170,14 @@
             </div>
 
             @if($errors->any())
-                <div role="alert" class="mt-6 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800 p-3 rounded-lg text-sm text-rose-700 dark:text-rose-300 flex items-start">
-                    <i data-lucide="alert-circle" class="w-4 h-4 mr-2 mt-0.5 shrink-0"></i>
-                    <span>{{ $errors->first() }}</span>
+                <div role="alert" class="mt-6 bg-rose-50 dark:bg-rose-950/60 border-l-4 border-rose-500 dark:border-rose-400 p-4 rounded-r-xl shadow-sm text-sm text-rose-700 dark:text-rose-300 flex items-start space-x-3 transition-all">
+                    <div class="p-1 bg-rose-100 dark:bg-rose-900/50 rounded-lg text-rose-600 dark:text-rose-300">
+                        <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                    </div>
+                    <div class="flex-1">
+                        <span class="font-semibold block text-rose-800 dark:text-rose-200">Gagal Masuk</span>
+                        <span class="mt-0.5 block">{{ $errors->first() }}</span>
+                    </div>
                 </div>
             @endif
 
