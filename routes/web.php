@@ -22,6 +22,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Route Import Excel Peserta
+    Route::get('/peserta/import', [PesertaController::class, 'importForm'])->name('peserta.import.form');
+    Route::post('/peserta/import', [PesertaController::class, 'importProcess'])->name('peserta.import.process')->middleware('throttle:6,1');
+    Route::get('/peserta/import/template', [PesertaController::class, 'importTemplate'])->name('peserta.import.template');
+
     Route::resource('skema-sertifikasi', SkemaSertifikasiController::class);
     Route::resource('peserta', PesertaController::class)->parameters(['peserta' => 'peserta']);
 });

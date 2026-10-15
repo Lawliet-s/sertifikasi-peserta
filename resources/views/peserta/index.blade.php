@@ -19,6 +19,9 @@
                     <a href="{{ route('peserta.index') }}" class="ml-2 px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-750 transition">Reset</a>
                 @endif
             </form>
+            <a href="{{ route('peserta.import.form') }}" class="inline-flex items-center px-4 py-2 bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 text-white text-sm font-medium rounded-lg shadow-sm transition whitespace-nowrap">
+                <i data-lucide="upload" class="w-4 h-4 mr-2"></i> Import Excel
+            </a>
             <a href="{{ route('peserta.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg shadow-sm transition whitespace-nowrap">
                 <i data-lucide="plus" class="w-4 h-4 mr-2"></i> Tambah Peserta
             </a>

@@ -3,12 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Enums\StatusPeserta;
+use App\Exports\PesertaTemplateExport;
+use App\Http\Requests\ImportPesertaRequest;
 use App\Http\Requests\PesertaRequest;
+use App\Imports\PesertaImport;
 use App\Models\Peserta;
 use App\Models\SkemaSertifikasi;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class PesertaController extends Controller
 {
@@ -82,5 +88,59 @@ class PesertaController extends Controller
         $peserta->delete();
 
         return redirect(route('peserta.index'))->with('success', 'Data peserta berhasil dihapus.');
+    }
+
+    // Menampilkan halaman form import Excel
+    public function importForm(): View
+    {
+        return view('peserta.import');
+    }
+
+    // Proses import data peserta dari file Excel
+    public function importProcess(ImportPesertaRequest $request): RedirectResponse
+    {
+        $file = $request->file('file');
+        $import = new PesertaImport();
+
+        try {
+            DB::transaction(function () use ($file, $import) {
+                Excel::import($import, $file);
+            });
+
+            $imported = $import->getImportedCount();
+            $failures = $import->failures();
+            $failedCount = count($failures);
+
+            $message = "Berhasil mengimpor {$imported} data peserta.";
+            if ($failedCount > 0) {
+                $message .= " Terdapat {$failedCount} baris yang gagal/dilewati.";
+            }
+
+            // Simpan kegagalan ke session untuk ditampilkan di view jika ada
+            $errorDetails = [];
+            $limit = 0;
+            foreach ($failures as $failure) {
+                if ($limit >= 20) break;
+                $errorDetails[] = [
+                    'row' => $failure->row(),
+                    'attribute' => $failure->attribute(),
+                    errors => $failure->errors(),
+                ];
+                $limit++;
+            }
+
+            return redirect(route('peserta.index'))
+                ->with('success', $message)
+                ->with('import_errors', $errorDetails);
+
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat mengimpor file: ' . $e->getMessage());
+        }
+    }
+
+    // Mengunduh template Excel untuk import peserta
+    public function importTemplate(): BinaryFileResponse
+    {
+        return Excel::download(new PesertaTemplateExport(), 'template_import_peserta.xlsx');
     }
 }
