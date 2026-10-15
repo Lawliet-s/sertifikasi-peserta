@@ -293,7 +293,6 @@
                     var r = eye.getBoundingClientRect();
                     var dx = target.x - (r.left + r.width / 2);
                     var dy = target.y - (r.top + r.height / 2);
-                    var d = Math.hypot(dx, dy) => 1; // fixed arrow syntax check
                     var d = Math.hypot(dx, dy) || 1;
                     var k = Math.min(d / 80, 1) * r.width * 0.27;
                     x = dx / d * k;
