@@ -1,13 +1,13 @@
 # AGENTS.md
 
 ## Tech Stack & Constraints
-- PHP 8.2 compatible (Laravel 11/12).
-- Database: MySQL `sertifikasi-peserta` via Laragon (DB name with hyphen: always backtick if raw SQL, use Eloquent/Query Builder).
-- Frontend: Blade + Tailwind CSS (dark mode supported via `dark:` class and `localStorage`). No emojis as icons (use Lucide / Font Awesome).
-- Language: Indonesian for UI/messages, brief Indonesian comments where necessary.
+- **PHP**: 8.2 compatible (Laravel 11/12).
+- **Database**: MySQL `sertifikasi-peserta` via Laragon (DB name with hyphen: always backtick if raw SQL, use Eloquent/Query Builder).
+- **Frontend**: Blade + Tailwind CSS (dark mode supported via `dark:` class and `localStorage`). No emojis as icons (use Lucide / Font Awesome).
+- **Language**: Indonesian for UI/messages, brief Indonesian comments where necessary.
 
 ## Commands
-- **Dev Server**: `composer dev`
+- **Dev Server**: `composer dev` (runs artisan serve, queue, logs, vite concurrently)
 - **Tests**: `composer test` or `php artisan test`
 - **Linter**: `vendor/bin/pint`
 
